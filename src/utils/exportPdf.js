@@ -16,12 +16,12 @@ export async function exportNodeToPdf(node, fileName = "SceneCraft_Report.pdf") 
     scale: 2.5, // crisp text
     useCORS: true,
     allowTaint: true,
-    backgroundColor: "#0f0f0f", // 🔥 IMPORTANT: keeps white text visible
+    backgroundColor: "#0f0f0f", // keeps white text visible
     logging: false,
     windowWidth: node.scrollWidth,
     windowHeight: node.scrollHeight,
     scrollX: 0,
-    scrollY: -window.scrollY, // avoids weird offsets
+    scrollY: 0, // ✅ safer than -window.scrollY (prevents partial captures)
   });
 
   const imgData = canvas.toDataURL("image/png", 1.0);
@@ -29,7 +29,7 @@ export async function exportNodeToPdf(node, fileName = "SceneCraft_Report.pdf") 
   // PDF settings (A4)
   const pdf = new jsPDF("p", "mm", "a4");
 
-  const pdfWidth = pdf.internal.pageSize.getWidth();  // 210mm
+  const pdfWidth = pdf.internal.pageSize.getWidth(); // 210mm
   const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
   // Canvas -> PDF scaling
