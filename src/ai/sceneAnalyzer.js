@@ -1,9 +1,9 @@
-/* -------------------------------------------
-   Scene Analyzer (Frontend Safe)
-   - Normalizes backend output into a stable schema
-   - Prevents analysis on empty / junk scenes (like ".")
-   - Supports A/B variants for same scene (draft vs improved)
-------------------------------------------- */
+// ---------------------------
+//    Scene Analyzer (Frontend Safe)
+//    - Normalizes backend output into a stable schema
+//    - Prevents analysis on empty / junk scenes (like ".")
+//    - Supports A/B variants for same scene (draft vs improved)
+// ------------------------------------------- */
 
 /**
  * Reject useless input like ".", "....", empty, spaces only, etc.
@@ -188,17 +188,17 @@ export async function analyzeScene(sceneText, options = {}) {
     throw new Error("Input scene is not analyzed. Please paste a meaningful scene (not empty or just symbols).");
   }
 
-  const response = await fetch("http://localhost:5000/analyze", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  const API_BASE =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-    // Send variant so backend can generate Draft vs Improved.
-    // Even if backend ignores it, it won’t break anything.
-    body: JSON.stringify({
-      scene: sceneText,
-      variant, // <-- IMPORTANT for A/B
-    }),
-  });
+const response = await fetch(`${API_BASE}/analyze`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    scene: sceneText,
+    variant,
+  }),
+});
 
   let data = null;
   try {
